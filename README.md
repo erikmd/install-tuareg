@@ -1,4 +1,4 @@
-# install-tuareg
+# install-tuareg-pfita
 
 Script d'installation de Tuareg+Company+Merlin pour les TPs OCaml,
 écrit en bash et utilisant
