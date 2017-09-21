@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 # Author: Erik Martin-Dorel
-# Version 2.0 (2017-09-17)
+# Version 2.1 (2017-09-18)
 
 set -euo pipefail
 # La ligne précédente, facultative, permet de quitter immédiatement
 # en cas d'erreur
-
-SRCDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-echo "Script lancé à partir du dossier : $SRCDIR" >&2
 
 function die_hard() {
     echo -e "$@" >&2
@@ -41,7 +38,6 @@ function ask() {
 }
 
 cat <<EOF
-
 Ce script "install-tuareg-pfita.bash" est dédié à l'installation de
 tuareg-mode + company (+ merlin) pour GNU/Linux.
 
@@ -55,6 +51,14 @@ De plus, il suppose que les logiciels suivants sont déjà installés :
 
 EOF
 
+SRCDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+stderr "Script lancé à partir du dossier : $SRCDIR"
+
+src_obj="$SRCDIR/_pfita"
+stderr "Si vous choisissez d'installer Merlin,"
+stderr "il sera installé dans le dossier : ${src_obj}"
+
+stderr
 pause
 stderr
 
@@ -110,7 +114,7 @@ cat > "$INI" <<EOF
  )
 
 (add-hook 'tuareg-mode-hook (lambda () (company-mode)
-  (local-set-key (kbd "M-RET") #'electric-indent-just-newline)
+  (local-set-key (kbd "<S-return>") #'electric-indent-just-newline)
   (local-set-key (kbd "<C-return>") #'company-complete)))
 
 ;; Configuration globale
@@ -140,11 +144,10 @@ if ask "Voulez-vous installer Merlin ? (améliore Tuareg, mais plus lourd à ins
     wget https://raw.githubusercontent.com/avsm/opam-boot/master/opam-boot
     # chmod a+x opam-boot # unnecessary (as we prepend 'bash' below)
 
-    src_obj="$SRCDIR/_pfita"
     opam_env="${src_obj}/opam-env.sh"
 
     if [[ ! -r "$opam_env" ]]; then
-	bash ./opam-boot --ocaml 4.01.0 --obj "${src_obj}"
+	bash ./opam-boot --ocaml 4.02.2 --obj "${src_obj}"
     else
 	stderr "Le fichier '$opam_env' existe déjà."
     fi
