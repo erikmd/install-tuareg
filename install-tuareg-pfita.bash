@@ -44,10 +44,12 @@ tuareg-mode + company (+ merlin) pour GNU/Linux.
 En particulier ce script n'est pas conçu pour Windows ou macOS.
 
 De plus, il suppose que les logiciels suivants sont déjà installés :
-- OCaml ["4.00.0" <= version < "4.03"]
-- GNU Emacs [version >= 24.3]
+- ocaml (version >= 4.01.0)
+- emacs (version >= 24.3)
 - wget (pour installer merlin)
 - m4   (pour installer merlin)
+- make (pour installer merlin)
+  make est typiquement fourni avec le paquet nommé build-essential.
 
 EOF
 
@@ -131,11 +133,6 @@ EOF
 
 stderr
 
-# https://github.com/ocaml/tuareg/releases/download/2.0.10/tuareg-2.0.10.tar.gz
-# https://github.com/ocaml/tuareg/archive/master.tar.gz
-# (load "~/.emacs.d/lisp/tuareg-2.0.10/tuareg-site-file")
-# https://raw.githubusercontent.com/ocaml/opam-repository/master/packages/merlin/merlin.2.3.1/opam
-
 # ================================================================
 
 stderr "*** Installation facultative de Merlin ..."
@@ -164,6 +161,8 @@ if ask "Voulez-vous installer Merlin ? (améliore Tuareg, mais plus lourd à ins
     source "${opam_env}"
 
     opam install -y merlin.2.3.1
+    ## Note: merlin 2.3.1 doesn't support OCaml >= 4.03:
+    ## https://raw.githubusercontent.com/ocaml/opam-repository/master/packages/merlin/merlin.2.3.1/opam
 
     stderr
     stderr "*** Merlin a été installé et le fichier '$INI' va être mis à jour ..."
