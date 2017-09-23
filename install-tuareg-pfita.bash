@@ -23,21 +23,22 @@ function ask() {
     stderr "$@"
     select val in "Oui" "Non"; do break; done
     if [ "$REPLY" = "" ]; then
-	die_hard "Vous avez sauté la question."
+        die_hard "Vous avez sauté la question."
     fi
     if [ "$val" = "" ]; then
-	die_hard "Votre réponse '$REPLY' est incorrecte. (Chiffre 1 ou 2 attendu.)"
+        die_hard "Votre réponse '$REPLY' est incorrecte. (Chiffre 1 ou 2 attendu.)"
     fi
     if [ "$val" = "Oui" ]; then
-	val=""
-	return 0
+        val=""
+        return 0
     else
-	val=""
-	return 1
+        val=""
+        return 1
     fi
 }
 
-cat <<EOF
+function main() {
+    cat <<EOF
 Ce script "install-tuareg-pfita.bash" est dédié à l'installation de
 tuareg-mode + company (+ merlin) pour GNU/Linux.
 
@@ -53,48 +54,48 @@ De plus, il suppose que les logiciels suivants sont déjà installés :
 
 EOF
 
-SRCDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-stderr "Script lancé à partir du dossier : $SRCDIR"
+    SRCDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+    stderr "Script lancé à partir du dossier : $SRCDIR"
 
-src_obj="$SRCDIR/_pfita"
-stderr "Si vous choisissez d'installer Merlin,"
-stderr "il sera installé dans le dossier : ${src_obj}"
+    src_obj="$SRCDIR/_pfita"
+    stderr "Si vous choisissez d'installer Merlin,"
+    stderr "il sera installé dans le dossier : ${src_obj}"
 
-stderr
-pause
-stderr
-
-# ================================================================
-
-FIL_EMACS=0
-if [[ -r "$HOME/.emacs" ]]; then FIL_EMACS=1; fi
-
-FIL_INIT=0
-if [[ -r "$HOME/.emacs.d/init.el" ]]; then FIL_INIT=1; fi
-
-if [[ $FIL_EMACS = 1 && $FIL_INIT = 1 ]]; then
-    stderr "Note : Vous avez à la fois un fichier ~/.emacs et ~/.emacs.d/init.el"
-    die_hard "Veuillez supprimer ou renommer ~/.emacs avant de relancer le script."
-fi
-
-if [[ $FIL_EMACS = 1 ]]; then
-    INI="$HOME/.emacs"
-else
-    mkdir -p "$HOME/.emacs.d"
-    INI="$HOME/.emacs.d/init.el"
-fi
-
-if [[ -f $INI ]]; then
-    stderr "*** Le fichier '$INI' existe déjà et va être sauvegardé ..."
-    cp --backup=numbered -f -v -- "$INI" "$INI"
     stderr
-fi
+    pause
+    stderr
 
-# ================================================================
+    # ================================================================
 
-stderr "*** Préparation du fichier $INI ..."
+    FIL_EMACS=0
+    if [[ -r "$HOME/.emacs" ]]; then FIL_EMACS=1; fi
 
-cat > "$INI" <<EOF
+    FIL_INIT=0
+    if [[ -r "$HOME/.emacs.d/init.el" ]]; then FIL_INIT=1; fi
+
+    if [[ $FIL_EMACS = 1 && $FIL_INIT = 1 ]]; then
+        stderr "Note : Vous avez à la fois un fichier ~/.emacs et ~/.emacs.d/init.el"
+        die_hard "Veuillez supprimer ou renommer ~/.emacs avant de relancer le script."
+    fi
+
+    if [[ $FIL_EMACS = 1 ]]; then
+        INI="$HOME/.emacs"
+    else
+        mkdir -p "$HOME/.emacs.d"
+        INI="$HOME/.emacs.d/init.el"
+    fi
+
+    if [[ -f $INI ]]; then
+        stderr "*** Le fichier '$INI' existe déjà et va être sauvegardé ..."
+        cp --backup=numbered -f -v -- "$INI" "$INI"
+        stderr
+    fi
+
+    # ================================================================
+
+    stderr "*** Préparation du fichier $INI ..."
+
+    cat > "$INI" <<EOF
 ;;; init.el --- Emacs conf file, created on $(date -I) -*- coding: utf-8 -*-
 
 ;; Configuration de Tuareg
@@ -113,7 +114,7 @@ cat > "$INI" <<EOF
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+)
 
 (add-hook 'tuareg-mode-hook (lambda () (company-mode)
   (local-set-key (kbd "<S-return>") #'electric-indent-just-newline)
@@ -131,48 +132,48 @@ cat > "$INI" <<EOF
 
 EOF
 
-stderr
-
-# ================================================================
-
-stderr "*** Installation facultative de Merlin ..."
-
-if ask "Voulez-vous installer Merlin ? (améliore Tuareg, mais plus lourd à installer)"; then
-    ## Issue with upstream version
-    ## https://raw.githubusercontent.com/avsm/opam-boot/master/opam-boot
-    ## cf. https://github.com/avsm/opam-boot/pull/4
-    wget https://raw.githubusercontent.com/erikmd/opam-boot/fd79be3d20ba5d2d052effb026898eaccc62dd3f/opam-boot
-    # chmod a+x opam-boot # unnecessary (as we prepend 'bash' below)
-
-    opam_env="${src_obj}/opam-env.sh"
-
-    if [[ ! -r "$opam_env" ]]; then
-	bash ./opam-boot --ocaml 4.02.2 --obj "${src_obj}"
-    else
-	stderr "Le fichier '$opam_env' existe déjà."
-    fi
-
-    ## We could use system's version of OCaml (else pick a default version)
-    ## but the version of merlin could change!
-    # OCAML_VERSION=$(ocamlc -version 2>/dev/null || true)
-    # if [[ -z $OCAML_VERSION ]]; then OCAML_VERSION='4.01.0'; fi
-    # bash ./opam-boot --ocaml "${OCAML_VERSION}" --obj "${src_obj}"
-
-    source "${opam_env}"
-
-    opam install -y merlin.2.3.1
-    ## Note: merlin 2.3.1 doesn't support OCaml >= 4.03:
-    ## https://raw.githubusercontent.com/ocaml/opam-repository/master/packages/merlin/merlin.2.3.1/opam
-
     stderr
-    stderr "*** Merlin a été installé et le fichier '$INI' va être mis à jour ..."
 
-    BIN_OCAML="$(which ocaml)" || die_hard "Erreur inattendue : ocaml non trouvé"
-    BIN_OPAM="$(which opam)" || die_hard "Erreur inattendue : opam non trouvé"
-    SHARE="$(opam config var share 2> /dev/null)"
-    BIN_MERLIN="$(which ocamlmerlin)" || die_hard "Erreur inattendue : ocamlmerlin non trouvé"
+    # ================================================================
 
-    cat >> "$INI" <<EOF
+    stderr "*** Installation facultative de Merlin ..."
+
+    if ask "Voulez-vous installer Merlin ? (améliore Tuareg, mais plus lourd à installer)"; then
+        ## Issue with upstream version
+        ## https://raw.githubusercontent.com/avsm/opam-boot/master/opam-boot
+        ## cf. https://github.com/avsm/opam-boot/pull/4
+        wget https://raw.githubusercontent.com/erikmd/opam-boot/fd79be3d20ba5d2d052effb026898eaccc62dd3f/opam-boot
+        # chmod a+x opam-boot # unnecessary (as we prepend 'bash' below)
+
+        opam_env="${src_obj}/opam-env.sh"
+
+        if [[ ! -r "$opam_env" ]]; then
+            bash ./opam-boot --ocaml 4.02.2 --obj "${src_obj}"
+        else
+            stderr "Le fichier '$opam_env' existe déjà."
+        fi
+
+        ## We could use system's version of OCaml (else pick a default version)
+        ## but the version of merlin could change!
+        # OCAML_VERSION=$(ocamlc -version 2>/dev/null || true)
+        # if [[ -z $OCAML_VERSION ]]; then OCAML_VERSION='4.01.0'; fi
+        # bash ./opam-boot --ocaml "${OCAML_VERSION}" --obj "${src_obj}"
+
+        source "${opam_env}"
+
+        opam install -y merlin.2.3.1
+        ## Note: merlin 2.3.1 doesn't support OCaml >= 4.03:
+        ## https://raw.githubusercontent.com/ocaml/opam-repository/master/packages/merlin/merlin.2.3.1/opam
+
+        stderr
+        stderr "*** Merlin a été installé et le fichier '$INI' va être mis à jour ..."
+
+        BIN_OCAML="$(which ocaml)" || die_hard "Erreur inattendue : ocaml non trouvé"
+        BIN_OPAM="$(which opam)" || die_hard "Erreur inattendue : opam non trouvé"
+        SHARE="$(opam config var share 2> /dev/null)"
+        BIN_MERLIN="$(which ocamlmerlin)" || die_hard "Erreur inattendue : ocamlmerlin non trouvé"
+
+        cat >> "$INI" <<EOF
 ;; Configuration de Merlin
 
 (setq tuareg-interactive-program "$BIN_OCAML")
@@ -196,11 +197,14 @@ if ask "Voulez-vous installer Merlin ? (améliore Tuareg, mais plus lourd à ins
 
 EOF
 
-    stderr
-fi
+        stderr
+    fi
 
-# ================================================================
+    # ================================================================
 
-stderr "*** Dernière étape : lancement d'Emacs et installation de tuareg & company."
+    stderr "*** Dernière étape : lancement d'Emacs et installation de tuareg & company."
 
-emacs --eval "(progn (package-refresh-contents) (package-install 'tuareg) (package-install 'company) (insert \"Installation de tuareg-mode terminée !\n\nVous pouvez créer un fichier avec l'extension .ml en faisant C-x C-f tp1.ml RET\"))" &
+    emacs --eval "(progn (package-refresh-contents) (package-install 'tuareg) (package-install 'company) (insert \"Installation de tuareg-mode terminée !\n\nVous pouvez créer un fichier avec l'extension .ml en faisant C-x C-f tp1.ml RET\"))" &
+}
+
+main
