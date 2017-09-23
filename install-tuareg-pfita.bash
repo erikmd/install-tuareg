@@ -21,6 +21,7 @@ function pause() {
 
 function ask() {
     stderr "$@"
+    local val
     select val in "Oui" "Non"; do break; done
     if [ "$REPLY" = "" ]; then
         die_hard "Vous avez sauté la question."
@@ -29,10 +30,8 @@ function ask() {
         die_hard "Votre réponse '$REPLY' est incorrecte. (Chiffre 1 ou 2 attendu.)"
     fi
     if [ "$val" = "Oui" ]; then
-        val=""
         return 0
     else
-        val=""
         return 1
     fi
 }
@@ -54,10 +53,11 @@ De plus, il suppose que les logiciels suivants sont déjà installés :
 
 EOF
 
-    SRCDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-    stderr "Script lancé à partir du dossier : $SRCDIR"
+    local srcdir
+    srcdir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+    stderr "Script lancé à partir du dossier : $srcdir"
 
-    src_obj="$SRCDIR/_pfita"
+    local src_obj="$srcdir/_pfita"
     stderr "Si vous choisissez d'installer Merlin,"
     stderr "il sera installé dans le dossier : ${src_obj}"
 
@@ -67,35 +67,36 @@ EOF
 
     # ================================================================
 
-    FIL_EMACS=0
-    if [[ -r "$HOME/.emacs" ]]; then FIL_EMACS=1; fi
+    local fil_emacs=0
+    if [[ -r "$HOME/.emacs" ]]; then fil_emacs=1; fi
 
-    FIL_INIT=0
-    if [[ -r "$HOME/.emacs.d/init.el" ]]; then FIL_INIT=1; fi
+    local fil_init=0
+    if [[ -r "$HOME/.emacs.d/init.el" ]]; then fil_init=1; fi
 
-    if [[ $FIL_EMACS = 1 && $FIL_INIT = 1 ]]; then
+    if [[ $fil_emacs = 1 && $fil_init = 1 ]]; then
         stderr "Note : Vous avez à la fois un fichier ~/.emacs et ~/.emacs.d/init.el"
         die_hard "Veuillez supprimer ou renommer ~/.emacs avant de relancer le script."
     fi
 
-    if [[ $FIL_EMACS = 1 ]]; then
-        INI="$HOME/.emacs"
+    local ini
+    if [[ $fil_emacs = 1 ]]; then
+        ini="$HOME/.emacs"
     else
         mkdir -p "$HOME/.emacs.d"
-        INI="$HOME/.emacs.d/init.el"
+        ini="$HOME/.emacs.d/init.el"
     fi
 
-    if [[ -f $INI ]]; then
-        stderr "*** Le fichier '$INI' existe déjà et va être sauvegardé ..."
-        cp --backup=numbered -f -v -- "$INI" "$INI"
+    if [[ -f $ini ]]; then
+        stderr "*** Le fichier '$ini' existe déjà et va être sauvegardé ..."
+        cp --backup=numbered -f -v -- "$ini" "$ini"
         stderr
     fi
 
     # ================================================================
 
-    stderr "*** Préparation du fichier $INI ..."
+    stderr "*** Préparation du fichier $ini ..."
 
-    cat > "$INI" <<EOF
+    cat > "$ini" <<EOF
 ;;; init.el --- Emacs conf file, created on $(date -I) -*- coding: utf-8 -*-
 
 ;; Configuration de Tuareg
@@ -145,7 +146,7 @@ EOF
         wget https://raw.githubusercontent.com/erikmd/opam-boot/fd79be3d20ba5d2d052effb026898eaccc62dd3f/opam-boot
         # chmod a+x opam-boot # unnecessary (as we prepend 'bash' below)
 
-        opam_env="${src_obj}/opam-env.sh"
+        local opam_env="${src_obj}/opam-env.sh"
 
         if [[ ! -r "$opam_env" ]]; then
             bash ./opam-boot --ocaml 4.02.2 --obj "${src_obj}"
@@ -155,9 +156,9 @@ EOF
 
         ## We could use system's version of OCaml (else pick a default version)
         ## but the version of merlin could change!
-        # OCAML_VERSION=$(ocamlc -version 2>/dev/null || true)
-        # if [[ -z $OCAML_VERSION ]]; then OCAML_VERSION='4.01.0'; fi
-        # bash ./opam-boot --ocaml "${OCAML_VERSION}" --obj "${src_obj}"
+        # ocaml_version=$(ocamlc -version 2>/dev/null || true)
+        # if [[ -z $ocaml_version ]]; then ocaml_version='4.01.0'; fi
+        # bash ./opam-boot --ocaml "${ocaml_version}" --obj "${src_obj}"
 
         source "${opam_env}"
 
@@ -166,23 +167,27 @@ EOF
         ## https://raw.githubusercontent.com/ocaml/opam-repository/master/packages/merlin/merlin.2.3.1/opam
 
         stderr
-        stderr "*** Merlin a été installé et le fichier '$INI' va être mis à jour ..."
+        stderr "*** Merlin a été installé et le fichier '$ini' va être mis à jour ..."
 
-        BIN_OCAML="$(which ocaml)" || die_hard "Erreur inattendue : ocaml non trouvé"
-        BIN_OPAM="$(which opam)" || die_hard "Erreur inattendue : opam non trouvé"
-        SHARE="$(opam config var share 2> /dev/null)"
-        BIN_MERLIN="$(which ocamlmerlin)" || die_hard "Erreur inattendue : ocamlmerlin non trouvé"
+        local bin_ocaml
+        bin_ocaml="$(which ocaml)" || die_hard "Erreur inattendue : ocaml non trouvé"
+        local bin_opam
+        bin_opam="$(which opam)" || die_hard "Erreur inattendue : opam non trouvé"
+        local share
+        share="$(opam config var share 2> /dev/null)"
+        local bin_merlin
+        bin_merlin="$(which ocamlmerlin)" || die_hard "Erreur inattendue : ocamlmerlin non trouvé"
 
-        cat >> "$INI" <<EOF
+        cat >> "$ini" <<EOF
 ;; Configuration de Merlin
 
-(setq tuareg-interactive-program "$BIN_OCAML")
-(setq tuareg-opam "$BIN_OPAM")
+(setq tuareg-interactive-program "$bin_ocaml")
+(setq tuareg-opam "$bin_opam")
 ;;;  (setq tuareg-opam-insinuate t) ; disabled - would overwrite merlin-command
 
 ;; Add opam emacs directory to the load-path
 ;;;  (setq opam-share (substring (shell-command-to-string "opam config var share 2> /dev/null") 0 -1))
-(setq opam-share "$SHARE")
+(setq opam-share "$share")
 (add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
 ;; Load merlin-mode
 (require 'merlin)
@@ -193,7 +198,7 @@ EOF
 (setq merlin-use-auto-complete-mode 'easy)
 ;; Use opam switch to lookup ocamlmerlin binary
 ;;;  (setq merlin-command 'opam)
-(setq merlin-command "$BIN_MERLIN")
+(setq merlin-command "$bin_merlin")
 
 EOF
 
