@@ -1,8 +1,9 @@
 # install-tuareg-pfita
 
-Script d'installation de Tuareg+Company+Merlin pour les TPs OCaml,
-écrit en bash et utilisant
-[opam-boot](https://github.com/avsm/opam-boot)
+Script d'installation de
+[Tuareg](https://github.com/ocaml/tuareg)+[Company](http://company-mode.github.io/)+[Merlin](https://github.com/ocaml/merlin)
+pour les TPs OCaml, écrit en bash et utilisant
+[opam-boot](https://github.com/avsm/opam-boot).
 
 ## Utilisation
 
@@ -19,8 +20,8 @@ Script d'installation de Tuareg+Company+Merlin pour les TPs OCaml,
 ## Remarques
 
 - Ce script interactif conçu pour GNU/Linux suppose que les logiciels
-  `ocaml` (4.00 <= version < 4.03) et `emacs` (version 24 ou 25) sont
-  déjà installés.
+  `ocaml` (version >= 4.01) et `emacs` (version >= 24.3) sont déjà
+  installés.
 - Il demande si vous souhaitez installer Merlin (mode Emacs améliorant
   Tuareg). Dans ce cas le script aura aussi besoin de `wget` et `m4`
   (ainsi que du paquet `build-essential`) pour installer Merlin.
