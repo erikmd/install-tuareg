@@ -143,7 +143,7 @@ EOF
         ## Issue with upstream version
         ## https://raw.githubusercontent.com/avsm/opam-boot/master/opam-boot
         ## cf. https://github.com/avsm/opam-boot/pull/4
-        wget https://raw.githubusercontent.com/erikmd/opam-boot/fd79be3d20ba5d2d052effb026898eaccc62dd3f/opam-boot
+        wget -O opam-boot https://raw.githubusercontent.com/erikmd/opam-boot/fd79be3d20ba5d2d052effb026898eaccc62dd3f/opam-boot
         # chmod a+x opam-boot # unnecessary (as we prepend 'bash' below)
 
         local opam_env="${src_obj}/opam-env.sh"
