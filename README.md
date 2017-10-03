@@ -27,6 +27,7 @@ pour les TPs OCaml, écrit en bash et utilisant
   (ainsi que du paquet `build-essential`) pour installer Merlin.
 - Pour installer ces paquets sous Ubuntu 16.04 ou Debian 9, faire :  
   ```
+  sudo apt-get update
   sudo apt-get install build-essential m4 wget emacs24 ocaml-core ocaml-best-compilers
   ```
 - Le script installe, si demandé, Merlin dans le dossier courant (dans
