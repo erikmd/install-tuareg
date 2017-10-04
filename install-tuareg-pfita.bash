@@ -47,6 +47,7 @@ De plus, il suppose que les logiciels suivants sont déjà installés :
 - ocaml (version >= 4.01.0)
 - emacs (version >= 24.3)
 - wget (pour installer merlin)
+- curl (pour installer merlin)
 - m4   (pour installer merlin)
 - make (pour installer merlin)
   make est typiquement fourni avec le paquet nommé build-essential.
