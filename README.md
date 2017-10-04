@@ -23,13 +23,12 @@ pour les TPs OCaml, écrit en bash et utilisant
   `ocaml` (version >= 4.01) et `emacs` (version >= 24.3) sont déjà
   installés.
 - Il demande si vous souhaitez installer Merlin (mode Emacs améliorant
-  Tuareg). Dans ce cas le script aura aussi besoin de `wget`, `curl`
-  et `m4` (ainsi que du paquet `build-essential`) pour installer
-  Merlin.
+  Tuareg). Dans ce cas le script aura aussi besoin de `curl` et `m4`
+  (ainsi que du paquet `build-essential`) pour installer Merlin.
 - Pour installer ces paquets sous Ubuntu 16.04 ou Debian 9, faire :  
   ```
   sudo apt-get update
-  sudo apt-get install build-essential m4 wget curl emacs24 ocaml-core ocaml-best-compilers
+  sudo apt-get install build-essential m4 curl emacs24 ocaml-core ocaml-best-compilers
   ```
 - Le script installe, si demandé, Merlin dans le dossier courant (dans
   un sous-dossier `_pfita`), puis la dernière version de Tuareg et

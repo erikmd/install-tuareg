@@ -46,7 +46,6 @@ En particulier ce script n'est pas conçu pour Windows ou macOS.
 De plus, il suppose que les logiciels suivants sont déjà installés :
 - ocaml (version >= 4.01.0)
 - emacs (version >= 24.3)
-- wget (pour installer merlin)
 - curl (pour installer merlin)
 - m4   (pour installer merlin)
 - make (pour installer merlin)
@@ -144,7 +143,7 @@ EOF
         ## Issue with upstream version
         ## https://raw.githubusercontent.com/avsm/opam-boot/master/opam-boot
         ## cf. https://github.com/avsm/opam-boot/pull/4
-        wget -O opam-boot https://raw.githubusercontent.com/erikmd/opam-boot/fd79be3d20ba5d2d052effb026898eaccc62dd3f/opam-boot
+        curl -OL https://raw.githubusercontent.com/erikmd/opam-boot/fd79be3d20ba5d2d052effb026898eaccc62dd3f/opam-boot
         chmod a+x opam-boot
 
         local opam_env="${src_obj}/opam-env.sh"
