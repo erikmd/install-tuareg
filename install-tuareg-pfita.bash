@@ -209,7 +209,7 @@ EOF
 
     stderr "*** Dernière étape : lancement d'Emacs et installation de tuareg & company."
 
-    emacs --eval "(progn (package-refresh-contents) (package-install 'tuareg) (package-install 'company) (insert \"Installation de tuareg-mode terminée !\n\nVous pouvez créer un fichier avec l'extension .ml en faisant C-x C-f tp1.ml RET\"))" &
+    emacs --eval "(progn (package-refresh-contents) (package-install 'tuareg) (package-install 'company) (insert \"Installation de tuareg-mode terminée !\n\nVous pouvez créer un fichier avec l'extension .ml en faisant C-x C-f tp1.ml RET\n\n(Rappel : C-x désigne la combinaison de touches Ctrl+x et RET la touche Entrée)\n\nSi vous voulez activer les raccourcis Windows pour le presse-papier,\nc'est-à-dire C-x/C-c/C-v/C-z, vous pouvez par exemple utiliser le menu\nOptions > Use CUA Keys.\n\") (goto-char (point-min)))" &
 }
 
 main
