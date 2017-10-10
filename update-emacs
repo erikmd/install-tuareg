@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# -*- coding: utf-8-unix; -*-
+# Note : l'encodage Unix des fins de ligne est important pour Bash
+
+# Erik Martin-Dorel, 2017
+
+# Ce script Bash permet de compléter le squelette fourni du fichier
+# .emacs avec le chemin des exécutables requis par Tuareg et Merlin
+
+set -euo pipefail
+
+fil="$HOME/.emacs"
+
+if [ ! -w "$fil" ]; then
+    echo "Erreur : le fichier \"$fil\" n'existe pas." >&2
+    exit 1
+fi
+
+if ! grep "???" "$fil" >/dev/null; then
+    echo "Erreur : le fichier \"$fil\" existe mais aucun remplacement ne reste à faire." >&2
+    exit 1
+fi
+
+pat1="???/opam.exe"
+path1=$(cygpath -m "$(which opam.exe)")
+pat2="???/share"
+path2=$(opam config var share)
+pat3="???/ocaml.exe"
+path3=$(cygpath -m "$(which ocaml.exe)")
+pat4="???/ocamlmerlin.exe"
+path4=$(cygpath -m "$(which ocamlmerlin.exe)")
+
+sed -i.bak -e "s|$pat1|$path1|; s|$pat2|$path2|; s|$pat3|$path3|; s|$pat4|$path4|" "$fil"
+
+echo "Remplacements effectués dans le fichier \"$fil\"." >&2
+
+echo "Vous pouvez maintenant lancer GNU Emacs (à partir de son icône sur le bureau)" >&2
