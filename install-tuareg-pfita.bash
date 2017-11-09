@@ -61,6 +61,14 @@ EOF
     stderr "Si vous choisissez d'installer Merlin,"
     stderr "il sera installé dans le dossier : ${src_obj}"
 
+    if [[ "$src_obj" =~ " " ]]; then
+	stderr "
+Attention : ce dossier contient des espaces, ce qui peut faire échouer
+la compilation d'OCaml. Si vous souhaitez installer Merlin, mieux vaut
+copier ce script à la racine de votre répertoire personnel ~/ avant de
+le ré-exécuter."
+    fi
+
     stderr
     pause
     stderr
