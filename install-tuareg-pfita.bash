@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Author: Erik Martin-Dorel
-# Version 2.2.1 (2017-10-04)
+version="version 2.2.2 (2017-11-09)"
 
 set -euo pipefail
 # La ligne précédente, facultative, permet de quitter immédiatement
@@ -38,8 +38,10 @@ function ask() {
 
 function main() {
     cat <<EOF
-Ce script "install-tuareg-pfita.bash" est dédié à l'installation de
-tuareg-mode + company (+ merlin) pour GNU/Linux.
+$(basename $0) - $version
+
+Ce script est dédié à l'installation de tuareg-mode + company (+ merlin)
+pour GNU/Linux.
 
 En particulier ce script n'est pas conçu pour Windows ou macOS.
 
@@ -55,11 +57,11 @@ EOF
 
     local srcdir
     srcdir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-    stderr "Script lancé à partir du dossier : $srcdir"
+    stderr "Script lancé à partir du dossier : '$srcdir'"
 
     local src_obj="$srcdir/_pfita"
     stderr "Si vous choisissez d'installer Merlin,"
-    stderr "il sera installé dans le dossier : ${src_obj}"
+    stderr "il sera installé dans le dossier : '${src_obj}'"
 
     if [[ "$src_obj" =~ " " ]]; then
 	stderr "
