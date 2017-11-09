@@ -140,10 +140,7 @@ EOF
     stderr "*** Installation facultative de Merlin ..."
 
     if ask "Voulez-vous installer Merlin ? (améliore Tuareg, mais plus lourd à installer)"; then
-        ## Issue with upstream version
-        ## https://raw.githubusercontent.com/avsm/opam-boot/master/opam-boot
-        ## cf. https://github.com/avsm/opam-boot/pull/4
-        curl -OL https://raw.githubusercontent.com/erikmd/opam-boot/fd79be3d20ba5d2d052effb026898eaccc62dd3f/opam-boot
+        curl -OL https://github.com/erikmd/opam-boot/raw/e14c42f21407576abc523125815d295a898cf0ea/opam-boot
         chmod a+x opam-boot
 
         local opam_env="${src_obj}/opam-env.sh"
