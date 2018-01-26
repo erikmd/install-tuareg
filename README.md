@@ -9,8 +9,7 @@ pour les TPs OCaml, écrit en bash et utilisant
 
 - Téléchargez le script
   [`install-tuareg-pfita.bash`](install-tuareg-pfita.bash)
-- Sauvegardez-le dans le dossier de votre choix (par exemple à la
-  racine de votre répertoire personnel `~/`)
+- Sauvegardez-le à la racine de votre répertoire personnel `~/`
 - Ouvrez un terminal et exécutez les commandes :  
   ```
   chmod a+x install-tuareg-pfita.bash  
