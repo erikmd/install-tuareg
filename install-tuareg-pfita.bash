@@ -129,7 +129,7 @@ le ré-exécuter."
 
 (add-hook 'tuareg-mode-hook (lambda () (company-mode)
   (local-set-key (kbd "<S-return>") #'electric-indent-just-newline)
-  (local-set-key (kbd "<C-return>") #'company-complete)))
+  (local-set-key (kbd "M-RET") #'company-complete)))
 
 ;; Configuration globale
 
