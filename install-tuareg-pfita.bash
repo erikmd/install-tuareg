@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Author: Erik Martin-Dorel
-version="version 2.2.2 (2017-11-09)"
+version="version 2.2.3 (2018-01-26)"
 
 set -euo pipefail
 # La ligne précédente, facultative, permet de quitter immédiatement
